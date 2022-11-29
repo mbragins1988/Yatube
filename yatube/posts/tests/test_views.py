@@ -138,7 +138,7 @@ class PaginatorViewsTest(TestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user = User.objects.create(
+        cls.author = User.objects.create(
             username='auth',
         )
         cls.group = Group.objects.create(
@@ -149,15 +149,26 @@ class PaginatorViewsTest(TestCase):
         for i in range(settings.TOTAL_NUMBER_OF_POSTS_IN_PAGINATOR):
             Post.objects.create(
                 text=f'Тестовый пост {i}',
-                author=cls.user,
+                author=cls.author,
                 group=cls.group
             )
 
     def setUp(self):
-        self.guest_client = Client()
+        self.user = User.objects.create(username='user')
+        self.authorized_user = Client()
+        self.authorized_user.force_login(self.user)
+
         self.URL_INDEX = ('posts:index', None)
         self.URL_GROUP = ('posts:group_list', (self.group.slug,))
-        self.URL_PROFILE = ('posts:profile', (self.user.username,))
+        self.URL_PROFILE = ('posts:profile', (self.author,))
+        self.URL_FOLLOWER = ('posts:follow_index', None)
+
+        self.authorized_user.get(
+            reverse(
+                'posts:profile_follow',
+                args=(self.author,)
+            )
+        )
 
     def test_paginator_on_pages(self):
         """Проверка пагинатора на двух страницах
@@ -166,6 +177,7 @@ class PaginatorViewsTest(TestCase):
             self.URL_INDEX,
             self.URL_GROUP,
             self.URL_PROFILE,
+            self.URL_FOLLOWER,
         )
         pages = (
             ('?page=1', settings.NUMBER__OF_POSTS),
@@ -176,7 +188,7 @@ class PaginatorViewsTest(TestCase):
             with self.subTest(url=url):
                 for page, nums in pages:
                     with self.subTest(page=page):
-                        response = self.guest_client.get(
+                        response = self.authorized_user.get(
                             reverse(url, args=args) + page
                         )
                         self.assertEqual(
@@ -202,7 +214,7 @@ class FollowersTests(TestCase):
         self.authorized_author = Client()
         self.authorized_author.force_login(self.author)
 
-    def test_subscription(self):
+    def test_subscription_(self):
         """Проверка работы подписки"""
         count_1 = Follow.objects.count()
         self.authorized_user.get(
@@ -217,7 +229,7 @@ class FollowersTests(TestCase):
         self.assertEqual(follow.author, self.post.author)
         self.assertEqual(follow.user, self.user)
 
-    def test_subscription(self):
+    def test_unsubscription(self):
         """Проверка работы отписки"""
         Follow.objects.create(
             author=self.author,
