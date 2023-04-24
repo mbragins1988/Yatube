@@ -4,44 +4,63 @@
 Yatube - это платформа для блогов, в которой можно зарегистрироваться, загрузить картинки, написать комментарии и подписаться на авторов постов. Регистрация выполняется по электронной почте, создаются и редактируются собственные записи, которы можно заносить в отдельные группы. Просмотриваются страницы других пользователей, комментируются их записи. Можно подписываться на других авторов.
 
 ### Как запустить проект
-Клонировать репозиторий
 
+Клонировать репозиторий:
 
 ```
-python -m venv venv
-``` 
-4. Активировать виртуальное окружение для проекта:
+git clone git@github.com:mbragins1988/Yatube.git
 ```
-# для OS Lunix и MacOS
-source venv/bin/activate
 
-# для OS Windows
+Перейти в папку
+
+```
+cd Yatube
+```
+
+Cоздать и активировать виртуальное окружение:
+
+```
+python3 -m venv venv
+```
+для Windows
+```
 source venv/Scripts/activate
 ```
-5. Установить зависимости:
+для Mac
 ```
-python3 -m pip install --upgrade pip
-pip install -r requirements.txt
+source venv/bin/activate
 ```
-6. Выполнить миграции на уровне проекта:
+
+Установить зависимости из файла requirements.txt:
+
+```
+pip3 install -r requirements.txt
+```
+
+Перейти в папку yatube:
+
 ```
 cd yatube
-python3 manage.py makemigrations
-python3 manage.py migrate
 ```
-7. Запустить проект локально:
-```
-python3 manage.py runserver
 
-# адрес запущенного проекта
-http://127.0.0.1:8000
-```
-8. Зарегистирировать суперпользователя Django:
-```
-python3 manage.py createsuperuser
+Выполнить миграции
 
-# адрес панели администратора
-http://127.0.0.1:8000/admin
 ```
-### Автор проекта
-Артем Римша
+python manage.py makemigrations
+```
+```
+python manage.py migrate
+```
+
+Запустить локальный сервер
+
+```
+python manage.py runserver
+```
+
+### Стек технологий:
+- Python 3.7
+- Django 2.2.16
+
+### Авторы проекта
+Михаил Брагин
