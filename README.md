@@ -58,6 +58,16 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+Перейти по адресу - http://127.0.0.1:8000
+
+Создать суперпользователя
+
+```
+python3 manage.py createsuperuser
+```
+
+Адрес админ-панели - http://127.0.0.1:8000/admin
+
 ### Стек технологий:
 - Python 3.7
 - Django 2.2.16
